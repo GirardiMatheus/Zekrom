@@ -1,4 +1,4 @@
 # Zekrom
 ZEKROM - Helpdesk Ticketing System
 
-![Logo da empresa](assets/zekrom.jpg)
+<img src="assets/zekrom.jpg" alt="Logo da empresa" width="300">
