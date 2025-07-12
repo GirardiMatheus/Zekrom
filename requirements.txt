@@ -1,0 +1,7 @@
+click
+rich
+pexpect
+pysnmp==4.4.12
+pyasn1==0.4.8
+pydantic
+python-dotenv
