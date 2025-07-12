@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class DeviceModel(BaseModel):
-    id: Optional[int]
+    id: Optional[int] = None
     hostname: str
     ip: str
     username: str
@@ -12,7 +12,7 @@ class DeviceModel(BaseModel):
 
 
 class IncidentModel(BaseModel):
-    id: Optional[int]
+    id: Optional[int] = None
     device_id: int
     message: str
     severity: str  # Ex: "critical", "warning", "info"
