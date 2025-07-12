@@ -1,0 +1,6 @@
+click
+rich
+pexpect
+pysnmp
+pydantic
+python-dotenv
