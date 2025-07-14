@@ -5,6 +5,9 @@ class SSHService:
     def __init__(self, ip: str, username: str, password: str):
         self.executor = SSHExecutor(ip, username, password)
 
+    def run_command(self, command: str) -> str:
+        return self.executor.run_command(command)
+
     def get_hostname(self) -> str:
         return self.executor.run_command("hostname")
 
