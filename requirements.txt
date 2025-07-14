@@ -5,3 +5,5 @@ pysnmp==4.4.12
 pyasn1==0.4.8
 pydantic
 python-dotenv
+rich==13.6.0
+typer==0.9.0
