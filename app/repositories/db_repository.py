@@ -2,9 +2,6 @@ import sqlite3
 from typing import List, Optional
 from app.schemas.models import DeviceModel, IncidentModel
 from app.core import config
-from datetime import datetime
-
-
 class DBRepository:
     def __init__(self, db_path: str = config.DB_PATH):
         self.db_path = db_path
