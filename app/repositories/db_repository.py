@@ -2,6 +2,7 @@ import sqlite3
 from typing import List, Optional
 from app.schemas.models import DeviceModel, IncidentModel
 from app.core import config
+from datetime import datetime
 
 
 class DBRepository:
@@ -86,10 +87,39 @@ class DBRepository:
         conn.close()
         return incident_id
 
-    def list_incidents(self) -> List[IncidentModel]:
+    def list_incidents(
+        self, 
+        from_date: Optional[str] = None,
+        to_date: Optional[str] = None,
+        severity: Optional[str] = None,
+        status: Optional[str] = None
+    ) -> List[IncidentModel]:
         conn = self._connect()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM incidents")
+        
+        # Build dynamic query with filters
+        query = "SELECT * FROM incidents WHERE 1=1"
+        params = []
+        
+        if from_date:
+            query += " AND timestamp >= ?"
+            params.append(from_date)
+            
+        if to_date:
+            query += " AND timestamp <= ?"
+            params.append(to_date)
+            
+        if severity:
+            query += " AND LOWER(severity) = LOWER(?)"
+            params.append(severity)
+            
+        if status:
+            query += " AND LOWER(status) = LOWER(?)"
+            params.append(status)
+            
+        query += " ORDER BY timestamp DESC"
+        
+        cursor.execute(query, params)
         rows = cursor.fetchall()
         conn.close()
         return [
