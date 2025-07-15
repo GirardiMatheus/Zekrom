@@ -9,6 +9,7 @@ class DeviceModel(BaseModel):
     ip: str
     username: str
     password: str
+    monitor_command: Optional[str] = "uptime"
 
 
 class IncidentModel(BaseModel):

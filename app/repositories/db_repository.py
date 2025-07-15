@@ -16,8 +16,8 @@ class DBRepository:
         conn = self._connect()
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO devices (hostname, ip, username, password) VALUES (?, ?, ?, ?)",
-            (device.hostname, device.ip, device.username, device.password)
+            "INSERT INTO devices (hostname, ip, username, password, monitor_command) VALUES (?, ?, ?, ?, ?)",
+            (device.hostname, device.ip, device.username, device.password, device.monitor_command)
         )
         conn.commit()
         device_id = cursor.lastrowid
@@ -31,7 +31,16 @@ class DBRepository:
         row = cursor.fetchone()
         conn.close()
         if row:
-            return DeviceModel(id=row[0], hostname=row[1], ip=row[2], username=row[3], password=row[4])
+            # Compatibilidade com banco antigo (sem monitor_command)
+            monitor_command = row[5] if len(row) > 5 else "uptime"
+            return DeviceModel(
+                id=row[0], 
+                hostname=row[1], 
+                ip=row[2], 
+                username=row[3], 
+                password=row[4],
+                monitor_command=monitor_command
+            )
         return None
 
     def list_devices(self) -> List[DeviceModel]:
@@ -40,7 +49,29 @@ class DBRepository:
         cursor.execute("SELECT * FROM devices")
         rows = cursor.fetchall()
         conn.close()
-        return [DeviceModel(id=r[0], hostname=r[1], ip=r[2], username=r[3], password=r[4]) for r in rows]
+        devices = []
+        for r in rows:
+            # Compatibilidade com banco antigo (sem monitor_command)
+            monitor_command = r[5] if len(r) > 5 else "uptime"
+            devices.append(DeviceModel(
+                id=r[0], 
+                hostname=r[1], 
+                ip=r[2], 
+                username=r[3], 
+                password=r[4],
+                monitor_command=monitor_command
+            ))
+        return devices
+
+    def update_device_monitor_command(self, device_id: int, monitor_command: str):
+        conn = self._connect()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE devices SET monitor_command = ? WHERE id = ?",
+            (monitor_command, device_id)
+        )
+        conn.commit()
+        conn.close()
 
     # Incidents
     def add_incident(self, incident: IncidentModel) -> int:

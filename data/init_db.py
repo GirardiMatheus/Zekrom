@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS devices (
     hostname TEXT NOT NULL,
     ip TEXT NOT NULL,
     username TEXT NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    monitor_command TEXT DEFAULT 'uptime'
 )
 """)
 
